@@ -1,10 +1,9 @@
 from crunpyroll import types
 from crunpyroll import enums
-
 import crunpyroll
 
 class GetLicense:
-    async def get_license(
+    def get_license(
         self: "crunpyroll.Client",
         media_id: str,
         *,
@@ -15,7 +14,7 @@ class GetLicense:
         Get DRM license. Useful to obtain decryption keys.
 
         .. todo::
-            
+
             Add support for PlayReady DRM
 
         Parameters:
@@ -30,8 +29,8 @@ class GetLicense:
             ``str``:
                 On success, license is returned.
         """
-        await self.session.retrieve()
-        response = await self.api_request(
+        self.session.retrieve()
+        response = self.api_request(
             method="POST",
             endpoint="v1/license/widevine",
             params={"specConform": True},

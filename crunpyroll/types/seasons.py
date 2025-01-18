@@ -67,7 +67,7 @@ class Season(Content):
 
         is_simulcast (``bool``):
             True, if this season is simulcast (currently airing).
-        
+
         is_subbed (``bool``):
             True, if this season got subtitles.
 

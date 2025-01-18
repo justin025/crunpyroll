@@ -1,9 +1,8 @@
 from crunpyroll import types
-
 import crunpyroll
 
 class GetObjects:
-    async def get_objects(
+    def get_objects(
         self: "crunpyroll.Client",
         object_id: str,
         *,
@@ -22,13 +21,13 @@ class GetObjects:
             locale (``str``, *optional*):
                 Localize request for different results.
                 Default to the one used in Client.
-                
+
         Returns:
             (:obj:`~crunpyroll.types.Series` | :obj:`~crunpyroll.types.Season` | :obj:`~crunpyroll.types.Episode` | :obj:`~crunpyroll.types.Movie`):
                 On success, series/season/episode/movie object is returned.
         """
-        await self.session.retrieve()
-        response = await self.api_request(
+        self.session.retrieve()
+        response = self.api_request(
             method="GET",
             endpoint="content/v2/cms/objects/" + object_id,
             params={

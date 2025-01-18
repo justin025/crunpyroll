@@ -1,9 +1,8 @@
 from crunpyroll import types
-
 import crunpyroll
 
 class GetSeries:
-    async def get_series(
+    def get_series(
         self: "crunpyroll.Client",
         series_id: str,
         *,
@@ -23,8 +22,8 @@ class GetSeries:
             :obj:`~crunpyroll.types.Series`:
                 On success, series object is returned.
         """
-        await self.session.retrieve()
-        response = await self.api_request(
+        self.session.retrieve()
+        response = self.api_request(
             method="GET",
             endpoint="content/v2/cms/series/" + series_id,
             params={

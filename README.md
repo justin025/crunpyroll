@@ -7,7 +7,6 @@
 ---
 
 #### Features 🔥
-- Fully async ([httpx](https://www.python-httpx.org/))
 - Python 3.7+ support
 - Clean and modern code
 - Updated to latest Crunchyroll API
@@ -40,18 +39,18 @@ client = crunpyroll.Client(
     password="password",
     locale="it-IT"
 )
-async def main():
+def main():
     # Start client and login
-    await client.start()
+    client.start()
     # Search for Attack on Titan
-    query = await client.search("Attack On Titan")
+    query = client.search("Attack On Titan")
     series_id = query.items[0].id
     print(series_id)
     # Retrieve all seasons of the series
-    seasons = await client.get_seasons(series_id)
+    seasons = client.get_seasons(series_id)
     print(seasons)
 
-asyncio.run(main())
+main()
 ```
 
 ---
@@ -68,15 +67,15 @@ from pywidevine.device import Device
 device = Device.load("l3cdm.wvd")
 cdm = Cdm.from_device(device)
 # Get streams of the episode/movie
-streams = await client.get_streams("GRVDQ1G4R")
+streams = client.get_streams("GRVDQ1G4R")
 # Get manifest of the format you prefer
-manifest = await client.get_manifest(streams.hardsubs[0].url)
+manifest = client.get_manifest(streams.hardsubs[0].url)
 # print(manifest)
 # Get Widevine PSSH from manifest
 pssh = PSSH(manifest.content_protection.widevine.pssh)
 session_id = cdm.open()
 challenge = cdm.get_license_challenge(session_id, pssh)
-license = await client.get_license(
+license = client.get_license(
     streams.media_id,
     challenge=challenge,
     token=streams.token
@@ -86,7 +85,7 @@ for key in cdm.get_keys(session_id, "CONTENT"):
     print(f"{key.kid.hex}:{key.key.hex()}")
 cdm.close(session_id)
 # Deleting active streams will prevent Crunchyroll HTTP 420 (too_many_queued_streams) error.
-await client.delete_active_stream(
+client.delete_active_stream(
     streams.media_id,
     token=streams.token
 )

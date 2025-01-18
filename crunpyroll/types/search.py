@@ -27,7 +27,7 @@ class SearchQuery(Object):
     ):
         self.total: int = total
         self.items: ITEMS_TYPING = items
-        
+
     @classmethod
     def parse(cls, response: Dict):
         # TODO: Add support for Music

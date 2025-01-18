@@ -44,9 +44,9 @@ class Manifest(Object):
         data["content_protection"] = {}
         manifest = xmltodict.parse(obj)
         for aset in manifest["MPD"]["Period"]["AdaptationSet"]:
-            template = aset["SegmentTemplate"]
-            for drm in aset["ContentProtection"]:
-                scheme_id_uri = drm["@schemeIdUri"]
+            template = aset.get("SegmentTemplate", {})
+            for drm in aset.get("ContentProtection", []):
+                scheme_id_uri = drm.get("@schemeIdUri", "")
                 if scheme_id_uri == WIDEVINE_UUID:
                     data["content_protection"]["widevine"] = {}
                     data["content_protection"]["widevine"]["pssh"] = drm["cenc:pssh"]
@@ -54,13 +54,14 @@ class Manifest(Object):
                 if scheme_id_uri == PLAYREADY_UUID:
                     data["content_protection"]["playready"] = {}
                     data["content_protection"]["playready"]["pssh"] = drm["mspr:pro"]
-            for repr in aset["Representation"]:
-                if repr.get("@mimeType").startswith("video"):
-                    stream = ManifestVideoStream.parse(repr, template)
-                    data["video_streams"].append(stream)
-                elif repr.get("@mimeType").startswith("audio"):
-                    stream = ManifestAudioStream.parse(repr, template)
-                    data["audio_streams"].append(stream)
+            if isinstance(aset["Representation"], list):
+                for repr in aset["Representation"]:
+                    if repr.get("@mimeType", "").startswith("video"):
+                        stream = ManifestVideoStream.parse(repr, template)
+                        data["video_streams"].append(stream)
+                    elif repr.get("@mimeType", "").startswith("audio"):
+                        stream = ManifestAudioStream.parse(repr, template)
+                        data["audio_streams"].append(stream)
         return cls(data)
 
 class ManifestVideoStream(Object):
@@ -76,7 +77,7 @@ class ManifestVideoStream(Object):
 
         height (``int``):
             Height of the video stream.
-        
+
         bitrate (``int``):
             Bitrate of the video stream.
 
@@ -99,7 +100,7 @@ class ManifestVideoStream(Object):
         data["bitrate"] = int(obj["@bandwidth"])
         data["segments"] = parse_segments(obj, template)
         return cls(data)
-    
+
 class ManifestAudioStream(Object):
     """
     Info about a manifest audio stream.
@@ -107,7 +108,7 @@ class ManifestAudioStream(Object):
     Parameters:
         codecs (``str``):
             Codecs of the audio stream.
-        
+
         bitrate (``int``):
             Bitrate of the audio stream.
 

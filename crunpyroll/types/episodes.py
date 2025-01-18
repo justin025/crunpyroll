@@ -101,10 +101,10 @@ class Episode(Content):
 
         images (:obj:`~crunpyroll.types.Images`):
             Images of the episode.
-        
+
         has_closed_captions (``bool``):
             True, if this episode got closed captions.
-        
+
         is_available_offline (``bool``):
             True, if this episode is available offline.
 
@@ -116,7 +116,7 @@ class Episode(Content):
 
         is_simulcast (``bool``):
             True, if this episode is simulcast (currently airing).
-        
+
         is_subbed (``bool``):
             True, if this episode got subtitles.
 
@@ -157,7 +157,7 @@ class Episode(Content):
         self.is_subbed: bool = data.get("is_subbed")
         self.is_dubbed: bool = data.get("is_dubbed")
         self.is_mature: bool = data.get("is_mature")
-    
+
     @classmethod
     def parse(cls, obj: Dict):
         data = {}

@@ -1,9 +1,8 @@
 from crunpyroll import types
-
 import crunpyroll
 
 class GetSeasons:
-    async def get_seasons(
+    def get_seasons(
         self: "crunpyroll.Client",
         series_id: str,
         *,
@@ -22,13 +21,13 @@ class GetSeasons:
             preferred_audio_language (``str``, *optional*):
                 Audio language request for different results.
                 Default to the one used in Client.
-                
+
         Returns:
             :obj:`~crunpyroll.types.SeasonsQuery`:
                 On success, query of seasons is returned.
         """
-        await self.session.retrieve()
-        response = await self.api_request(
+        self.session.retrieve()
+        response = self.api_request(
             method="GET",
             endpoint="content/v2/cms/series/" + series_id + "/seasons",
             params={

@@ -1,9 +1,8 @@
 from crunpyroll import types
-
 import crunpyroll
 
 class GetEpisodes:
-    async def get_episodes(
+    def get_episodes(
         self: "crunpyroll.Client",
         season_id: str,
         *,
@@ -18,13 +17,13 @@ class GetEpisodes:
             locale (``str``, *optional*):
                 Localize request for different results.
                 Default to the one used in Client.
-                
+
         Returns:
             :obj:`~crunpyroll.types.EpisodesQuery`:
                 On success, query of episodes is returned.
         """
-        await self.session.retrieve()
-        response = await self.api_request(
+        self.session.retrieve()
+        response = self.api_request(
             method="GET",
             endpoint="content/v2/cms/seasons/" + season_id + "/episodes",
             params={

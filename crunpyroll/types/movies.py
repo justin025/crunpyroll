@@ -5,7 +5,7 @@ from ..utils import str_to_date
 
 from typing import List, Dict
 from datetime import datetime
-    
+
 class Movie(Content):
     """
     Info about a movie.
@@ -47,10 +47,10 @@ class Movie(Content):
 
         images (:obj:`~crunpyroll.types.Images`):
             Images of the movie.
-        
+
         has_closed_captions (``bool``):
             True, if this movie got closed captions.
-        
+
         is_available_offline (``bool``):
             True, if this movie is available offline.
 
@@ -65,7 +65,7 @@ class Movie(Content):
 
         is_simulcast (``bool``):
             True, if this movie is simulcast (currently airing).
-        
+
         is_subbed (``bool``):
             True, if this movie got subtitles.
 
@@ -97,7 +97,7 @@ class Movie(Content):
         self.is_subbed: bool = data.get("is_subbed")
         self.is_dubbed: bool = data.get("is_dubbed")
         self.is_mature: bool = data.get("is_mature")
-    
+
     @classmethod
     def parse(cls, obj: Dict):
         data = {}

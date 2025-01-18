@@ -1,9 +1,8 @@
 from crunpyroll import types
-
 import crunpyroll
 
 class GetProfile:
-    async def get_profile(
+    def get_profile(
         self: "crunpyroll.Client",
     ) -> "types.Profile":
         """
@@ -13,8 +12,8 @@ class GetProfile:
             :obj:`~crunpyroll.types.Profile`:
                 On success, profile object is returned.
         """
-        await self.session.retrieve()
-        response = await self.api_request(
+        self.session.retrieve()
+        response = self.api_request(
             method="GET",
             endpoint="accounts/v1/me/profile",
         )

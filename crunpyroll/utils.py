@@ -52,10 +52,10 @@ def format_segment_url(url: str, obj: Dict) -> str:
         url = url.replace(f"${key}$", value)
     return url
 
-def get_date() -> datetime: 
+def get_date() -> datetime:
     return datetime.utcnow()
 
-def date_to_str(date: datetime) -> Optional[str]: 
+def date_to_str(date: datetime) -> Optional[str]:
     try:
         return "{}-{}-{}T{}:{}:{}Z".format(
             date.year, date.month,

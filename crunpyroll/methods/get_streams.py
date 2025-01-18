@@ -1,10 +1,9 @@
 from crunpyroll import types
 from crunpyroll import enums
-
 import crunpyroll
 
 class GetStreams:
-    async def get_streams(
+    def get_streams(
         self: "crunpyroll.Client",
         media_id: str,
         *,
@@ -24,8 +23,8 @@ class GetStreams:
             :obj:`~crunpyroll.types.MediaStreams`:
                 On success, streams are returned.
         """
-        await self.session.retrieve()
-        response = await self.api_request(
+        self.session.retrieve()
+        response = self.api_request(
             method="GET",
             endpoint="v1/" + media_id + "/android/phone/play",
             params={

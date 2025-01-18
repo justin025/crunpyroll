@@ -11,8 +11,8 @@ class SubtitlesStream(Object):
             File format for subtitles (ass, srt, ...).
 
         language (``str``):
-            Language code of the subtitles.    
-        
+            Language code of the subtitles.
+
         url (``str``):
             Direct URL to subtitles.
     """

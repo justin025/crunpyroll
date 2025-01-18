@@ -1,15 +1,8 @@
 from datetime import datetime, timedelta
-
-from .utils import (
-    get_date,
-    PUBLIC_TOKEN
-)
-
-from .errors import ClientNotAuthorized
-
 from typing import Optional
-
 import crunpyroll
+from .errors import ClientNotAuthorized
+from .utils import get_date, PUBLIC_TOKEN
 
 class Session:
     def __init__(
@@ -25,20 +18,20 @@ class Session:
     @property
     def is_authorized(self):
         return bool(self.access_token and self.refresh_token)
-    
+
     @property
     def authorization_header(self):
         return {"Authorization": f"Bearer {self.access_token}"}
-    
-    async def retrieve(self) -> None:
+
+    def retrieve(self) -> None:
         if not self.is_authorized:
             raise ClientNotAuthorized("Client is not authorized yet.")
         date = get_date()
         if date >= self.expiration:
-            await self.refresh()
-    
-    async def authorize(self) -> Optional[bool]:
-        response = await self._client.api_request(
+            self.refresh()
+
+    def authorize(self) -> Optional[bool]:
+        response = self._client.api_request(
             method="POST",
             endpoint="auth/v1/token",
             headers={
@@ -52,7 +45,8 @@ class Session:
                 "device_id": self._client.device_id,
                 "device_name": self._client.device_name,
                 "device_type": self._client.device_type
-            }, include_session=False
+            },
+            include_session=False
         )
         self.access_token = response.get("access_token")
         self.refresh_token = response.get("refresh_token")
@@ -60,9 +54,9 @@ class Session:
             seconds=response.get("expires_in")
         )
         return True
-    
-    async def refresh(self) -> Optional[bool]:
-        response = await self._client.api_request(
+
+    def refresh(self) -> Optional[bool]:
+        response = self._client.api_request(
             method="POST",
             endpoint="auth/v1/token",
             headers={
@@ -75,7 +69,8 @@ class Session:
                 "device_id": self._client.device_id,
                 "device_name": self._client.device_name,
                 "device_type": self._client.device_type
-            }, include_session=False
+            },
+            include_session=False
         )
         self.access_token = response.get("access_token")
         self.refresh_token = response.get("refresh_token")

@@ -1,3 +1,4 @@
+
 from .methods import Methods
 from .utils import (
     get_api_headers,
@@ -5,7 +6,6 @@ from .utils import (
     DEVICE_NAME,
     DEVICE_TYPE
 )
-
 from .session import Session
 from .errors import CrunpyrollException
 from .enums import APIHost
@@ -16,12 +16,12 @@ from typing import (
     Dict
 )
 
-import httpx
+import requests
 import json
 
 class Client(Object, Methods):
     """Initialize Crunchyroll Client
-    
+
     Parameters:
         email (``str``):
             Email or username of the account.
@@ -64,17 +64,20 @@ class Client(Object, Methods):
         self.device_name: str = device_name
         self.device_type: str = device_type
 
-        self.http = httpx.AsyncClient(proxies=proxies, timeout=15)
+        self.http = requests.Session()
+        if proxies:
+            self.http.proxies = proxies
+        self.http.timeout = 15
         self.session = Session(self)
 
-    async def start(self):
+    def start(self):
         if self.session.is_authorized:
             raise CrunpyrollException("Client is already authorized and started.")
-        return await self.session.authorize()
+        return self.session.authorize()
 
     @staticmethod
     def parse_response(
-        response: httpx.Response,
+        response: requests.Response,
         *,
         method: str = "GET",
     ) -> Optional[Union[Dict, str]]:
@@ -91,7 +94,7 @@ class Client(Object, Methods):
             return content
         raise CrunpyrollException(message)
 
-    async def api_request(
+    def api_request(
         self,
         method: str,
         endpoint: str,
@@ -107,7 +110,7 @@ class Client(Object, Methods):
         api_headers = get_api_headers(headers)
         if self.session.is_authorized and include_session:
             api_headers.update(self.session.authorization_header)
-        response = await self.http.request(
+        response = self.http.request(
             method=method,
             url=url,
             params=params,
@@ -115,8 +118,8 @@ class Client(Object, Methods):
             data=payload
         )
         return Client.parse_response(response, method=method)
-    
-    async def manifest_request(
+
+    def manifest_request(
         self,
         url: str,
         headers: Dict = None,
@@ -124,7 +127,7 @@ class Client(Object, Methods):
         api_headers = get_api_headers(headers)
         if self.session.is_authorized:
             api_headers.update(self.session.authorization_header)
-        response = await self.http.request(
+        response = self.http.request(
             method="GET",
             url=url,
             headers=api_headers,

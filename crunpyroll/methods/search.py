@@ -1,12 +1,10 @@
 from crunpyroll import enums
 from crunpyroll import types
-
 from typing import List
-
 import crunpyroll
 
 class Search:
-    async def search(
+    def search(
         self: "crunpyroll.Client",
         query: str,
         *,
@@ -39,12 +37,12 @@ class Search:
             :obj:`~crunpyroll.types.SearchQuery`:
                 On success, query of results is returned.
         """
-        await self.session.retrieve()
+        self.session.retrieve()
         filters_string = ",".join(
             filter.value for filter in filters
             if isinstance(filter, enums.ContentType)
         )
-        response = await self.api_request(
+        response = self.api_request(
             method="GET",
             endpoint="content/v2/discover/search",
             params={
