@@ -46,7 +46,7 @@ class Manifest(Object):
         for aset in manifest["MPD"]["Period"]["AdaptationSet"]:
             template = aset.get("SegmentTemplate", {})
             for drm in aset.get("ContentProtection", []):
-                scheme_id_uri = drm.get("@schemeIdUri", "")
+                scheme_id_uri = drm.get("@schemeIdUri")
                 if scheme_id_uri == WIDEVINE_UUID:
                     data["content_protection"]["widevine"] = {}
                     data["content_protection"]["widevine"]["pssh"] = drm["cenc:pssh"]
@@ -56,10 +56,10 @@ class Manifest(Object):
                     data["content_protection"]["playready"]["pssh"] = drm["mspr:pro"]
             if isinstance(aset["Representation"], list):
                 for repr in aset["Representation"]:
-                    if repr.get("@mimeType", "").startswith("video"):
+                    if repr.get("@mimeType").startswith("video"):
                         stream = ManifestVideoStream.parse(repr, template)
                         data["video_streams"].append(stream)
-                    elif repr.get("@mimeType", "").startswith("audio"):
+                    elif repr.get("@mimeType").startswith("audio"):
                         stream = ManifestAudioStream.parse(repr, template)
                         data["audio_streams"].append(stream)
         return cls(data)
